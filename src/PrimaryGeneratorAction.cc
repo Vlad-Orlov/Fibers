@@ -17,17 +17,17 @@
 PrimaryGeneratorAction::PrimaryGeneratorAction()
 {
     // Detector Messenger
-    _src_shiftX = 0.0*mm;
+    _src_shiftX = 0.0*cm;
     _src_shiftY = 0.0*mm;
     _src_shiftZ = 0.0*mm;
     _src_conf_id = 1;
 
     _particleGun = new G4ParticleGun(1);
-    _particleGun->SetParticleEnergy(0*eV);
-    _particleGun->SetParticlePosition(G4ThreeVector(_src_shiftX,_src_shiftY,_src_shiftZ));
-    _particleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,1.));
-
-    _detector = (DetectorConstruction*) G4RunManager::GetRunManager()->GetUserDetectorConstruction();
+    // _particleGun->SetParticleEnergy(0*eV);
+    // _particleGun->SetParticlePosition(G4ThreeVector(_src_shiftX,_src_shiftY,_src_shiftZ));
+    // _particleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,1.));
+    //
+     _detector = (DetectorConstruction*) G4RunManager::GetRunManager()->GetUserDetectorConstruction();
 }
 
 PrimaryGeneratorAction::~PrimaryGeneratorAction()
@@ -44,18 +44,20 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
     _src_shiftY = _detector->GetSrcShiftY();
     _src_shiftZ = _detector->GetSrcShiftZ();
 
-    G4double PosX = 0.0*mm;
-    G4double PosY = 0.0*mm;
-    G4double PosZ = 0.0*mm;
+    G4double PosX = 0.0*cm;
+    G4double PosY = 0.0*cm;
+    G4double PosZ =   0.0*cm;
 
     G4bool trkIsOk = false;
     G4int nMax = 1000000;
 
+
+///// Code for 90Sr cource
     for(G4int i = 0; i < nMax; i++)
     {
-        PosX = G4UniformRand()*UA9Const::_src_length - UA9Const::_src_length/2;
-        PosY = G4UniformRand()*UA9Const::_src_diam - UA9Const::_src_diam/2;
-        PosZ = G4UniformRand()*UA9Const::_src_diam - UA9Const::_src_diam/2;
+        // PosX = G4UniformRand()*UA9Const::_src_length - UA9Const::_src_length/2;
+        // PosY = G4UniformRand()*UA9Const::_src_diam - UA9Const::_src_diam/2;
+        // PosZ = G4UniformRand()*UA9Const::_src_diam - UA9Const::_src_diam/2;
 
         if(PosX >= -UA9Const::_src_length/2 && PosX <= UA9Const::_src_length/2 && (PosY*PosY + PosZ*PosZ) <=  UA9Const::_src_diam*UA9Const::_src_diam/4.0)
         {
@@ -83,14 +85,23 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
             G4double ionCharge   = 0.*eplus;
             G4double excitEnergy = 0.*keV;
 
-            G4ParticleDefinition* ion = G4ParticleTable::GetParticleTable()->GetIon(Z,A,excitEnergy);
-            _particleGun->SetParticleDefinition(ion);
-            _particleGun->SetParticleCharge(ionCharge);
+//            G4ParticleDefinition* ion = G4ParticleTable::GetParticleTable()->GetIon(Z,A,excitEnergy);
+                G4String particleName = "e-";
+
+                G4ParticleDefinition* particle = G4ParticleTable::GetParticleTable()->FindParticle(particleName);
+                _particleGun->SetParticleDefinition(particle);
+            //_particleGun->SetParticleDefinition(ion);
+            //_particleGun->SetParticleCharge(ionCharge);
             _particleGun->SetParticlePosition(G4ThreeVector(PosX,PosY,PosZ));
-            _particleGun->SetParticleMomentumDirection(G4RandomDirection());
+            G4ThreeVector direction = G4ThreeVector(1,0,0);
+            // direction.rotateY(-47*deg);
+            _particleGun->SetParticleMomentumDirection(direction);
+            _particleGun->SetParticleEnergy(1*MeV);
             _particleGun->GeneratePrimaryVertex(anEvent);
         }
     }
+
+
 
     if(!trkIsOk)
     {
@@ -98,3 +109,20 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
         assert(0);
     }
 }
+
+
+// void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
+// {
+//     G4double PosX = 10.0*cm;
+//     G4double PosY = 10.0*cm;
+//     G4double PosZ = 10.0*cm;
+//
+//     G4String particleName = "e-";
+//
+//     G4ParticleDefinition* particle = G4ParticleTable::GetParticleTable()->FindParticle(particleName);
+//     _particleGun->SetParticleDefinition(particle);
+//     _particleGun->SetParticlePosition(G4ThreeVector(PosX,PosY,PosZ));
+//     _particleGun->SetParticleMomentumDirection(G4RandomDirection());
+//     _particleGun->GeneratePrimaryVertex(anEvent);
+//
+// }

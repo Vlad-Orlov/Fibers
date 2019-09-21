@@ -358,6 +358,11 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     Tr = G4Transform3D(Ra, Ta);
     //Ra.rotateY(-alphaRotSen);
     new G4PVPlacement(Tr, sensitive.logical,"Sensitive", world.logical, false,0);
+
+    Ta.setZ((fiberCorr_L/2.)+senDet_sizeZ/2.0+viewport_sizeZ);
+    Tr = G4Transform3D(Ra, Ta);
+    new G4PVPlacement(Tr, sensitive.logical,"Sensitive2", world.logical, false,0);
+
     //-----------------------------------------------------------------------------------------------////-----------------------------------------------------------------------------------------------//
     // VIEWPORT
     //-----------------------------------------------------------------------------------------------////-----------------------------------------------------------------------------------------------//
@@ -379,6 +384,11 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     Tr = G4Transform3D(Ra, Ta);
     //Ra.rotateY(-alphaRotSen);
     new G4PVPlacement(Tr, viewport.logical,"Viewport", world.logical, false,0);
+
+
+    Ta.setZ((fiberCorr_L/2.)+viewport_sizeZ/2.0);
+    Tr = G4Transform3D(Ra, Ta);
+    new G4PVPlacement(Tr, viewport.logical,"Viewport2", world.logical, false,0);
 
     //-----------------------------------------------------------------------------------------------////-----------------------------------------------------------------------------------------------//
     // QUARTZ BARS
@@ -436,22 +446,14 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
 
   G4Box* part1Solid =
-    new G4Box("Part1",                       //its name
+    new G4Box("Part1",                        //its name
        0.5*part1_width, 0.5*part1_height,0.5*part1_lenght);     //its size
 
   G4LogicalVolume* part1Logical =
     new G4LogicalVolume(part1Solid,          //its solid
-                        abs23.material,           //its material
+                        abs23.material,      //its material
                         "Part1");            //its name
 
-// G4VPhysicalVolume* part1Physical =
-//    new G4PVPlacement(0,                     //no rotation
-//                      G4ThreeVector(),       //at (0,0,0)
-//                      part1Logical,            //its logical volume
-//                      "Part1",               //its name
-//                      world.logical,                     //its mother  volume
-//                      false,                 //no boolean operation
-//                      0);                 //copy number
 
 //....ooo0000ooooo
   G4double part2_lenght=32.24*mm;
@@ -470,7 +472,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   rotation->rotateY(90*deg);
 
   G4Box* part2SolidBox =
-    new G4Box("Part2",                       //its name
+    new G4Box("Part2",                                          //its name
        0.5*part2_width, 0.5*part2_height,0.5*part2_lenght);     //its size
 
   G4VSolid* part2Solid_ = new G4SubtractionSolid ("part2Solid_", part2SolidBox, cylinderSolid, rotation, G4ThreeVector(-(part2_width/2.-cylinder_height/2.)) );
@@ -480,15 +482,6 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     new G4LogicalVolume(part2Solid,          //its solid
                         abs23.material,           //its material
                         "Part2");            //its name
-
-//  G4VPhysicalVolume* part2Physical =
-//    new G4PVPlacement(0,                     //no rotation
-//                      G4ThreeVector((part1_width/2.-part2_width/2.),(part1_height/2.+part2_height/2.),0),       //at (0,0,0)
-//                     part2Logical,            //its logical volume
-//                      "Part2",               //its name
-//                      world.logical,                     //its mother  volume
-//                      false,                 //no boolean operation
-//                      0);                    //copy number
 
 
   //....ooo0000ooooo
@@ -503,7 +496,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   G4Tubs* holeSolid = new G4Tubs("cylinder", 0, hole_radius, hole_depth, 0, 360*deg);
 
   G4Box* part3SolidBox =
-    new G4Box("Part3",                       //its name
+    new G4Box("Part3",                                          //its name
        0.5*part3_width, 0.5*part3_height,0.5*part3_lenght);     //its size
 
   G4VSolid* part3Solid = new G4SubtractionSolid ("part3Solid", part3SolidBox, holeSolid, rotation, G4ThreeVector() );
@@ -512,18 +505,9 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
   G4LogicalVolume* part3Logical =
     new G4LogicalVolume(part3Solid,          //its solid
-                        abs23.material,           //its material
+                        abs23.material,      //its material
                         "Part3");            //its name
 
-//  G4VPhysicalVolume* part3Physical =
-//    new G4PVPlacement(0,                     //no rotation
-//                     G4ThreeVector((part1_width/2+part3_width/2),(part1_height/2+part2_height-a-part3_height/2),0),       //at (0,0,0)
-//                      part3Logical,            //its logical volume
-//                      "Part3",               //its name
-//                      world.logical,                     //its mother  volume
-//                      false,                 //no boolean operation
-//                      0);                     //copy number
-//
 
 
   G4double part4_lenght=29.5*mm;
@@ -535,7 +519,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   G4Tubs* cylinder2Solid = new G4Tubs("cylinder2", 0, cylinder2_radius, cylinder2_height/2., 0, 360*deg);
 
   G4Box* part4SolidBox =
-    new G4Box("Part4",                       //its name
+    new G4Box("Part4",                                          //its name
        0.5*part4_width, 0.5*part4_height,0.5*part4_lenght);     //its size
 
   G4VSolid* part4Solid = new G4SubtractionSolid ("part4Solid", part4SolidBox, cylinder2Solid, rotation, G4ThreeVector(part4_width/2.-cylinder2_height/2.) );
@@ -547,15 +531,6 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                         abs23.material,           //its material
                         "Part4");            //its name
 
-//  G4VPhysicalVolume* part4Physical =
-//    new G4PVPlacement(0,                     //no rotation
-//                      G4ThreeVector((-part4_width/2), (part1_height/2+part4_height/2),0),       //at (0,0,0)
-//                      part4Logical,            //its logical volume
-//                      "Part4",               //its name
-//                      world.logical,                     //its mother  volume
-//                    false,                 //no boolean operation
-//                      0);                     //copy number
-
 
 
 
@@ -566,19 +541,49 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   G4VSolid* holderSolid_  = new G4UnionSolid ("holderSolid", holderSolid, part1Solid, 0, G4ThreeVector(-(part1_width-part2_width)/2.,-(part1_height/2+part2_height/2),0.) );
 
   G4LogicalVolume* holderLogical =
-    new G4LogicalVolume(holderSolid_,          //its solid
+    new G4LogicalVolume(holderSolid_,             //its solid
                         abs23.material,           //its material
-                        "Holder");            //its name
+                        "Holder");                //its name
 
   rotation->rotateY(- 90*deg -47*deg);
+  // G4VPhysicalVolume* holderPhysical =
+  //   new G4PVPlacement(rotation,                     //no rotation
+  //                     G4ThreeVector(-3*cm,1*mm,0), //at
+  //                     holderLogical,               //its logical volume
+  //                     "Holder",                    //its name
+  //                     world.logical,               //its mother  volume
+  //                     false,                       //no boolean operation
+  //                     0);                          //copy number
+
+
+
+  //-----------------------------------------------------------------------------------------------////-----------------------------------------------------------------------------------------------//
+  // SCINTILATOR
+  //-----------------------------------------------------------------------------------------------////-----------------------------------------------------------------------------------------------//
+
+  G4double scint_width  = 5*mm;
+  G4double scint_height = 5*mm;
+  G4double scint_lenght = 5*mm;
+
+  G4Box* scintSolidBox =
+    new G4Box("Part4",                                          //its name
+       0.5*scint_width, 0.5*scint_height,0.5*scint_lenght);     //its size
+
+
+  G4LogicalVolume* scintLogical =
+  new G4LogicalVolume(scintSolidBox,          //its solid
+                      abs23.material,           //its material
+                      "Part4");            //its name
+
   G4VPhysicalVolume* holderPhysical =
-    new G4PVPlacement(0,                     //no rotation
-                      G4ThreeVector(-3*cm,1*mm,0),       //at
-                      holderLogical,            //its logical volume
-                      "Holder",               //its name
-                      world.logical,                     //its mother  volume
-                      false,                 //no boolean operation
-                      0);                     //copy number
+    new G4PVPlacement(rotation,                     //no rotation
+                      G4ThreeVector(-3*cm,1*mm,0), //at
+                      holderLogical,               //its logical volume
+                      "Holder",                    //its name
+                      world.logical,               //its mother  volume
+                      false,                       //no boolean operation
+                      0);                          //copy number
+
 
 
 
@@ -770,6 +775,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     VolumeKill->AddProperty("EFFICIENCY",   Ephoton, EfficiencyKill,   num1);
     OpVolumeKillSurface->SetMaterialPropertiesTable(VolumeKill);
     new G4LogicalSkinSurface("SensitiveSurface", sensitive.logical, OpVolumeKillSurface);
+
 
     //-----------------------------------------------------------------------------------------------////-----------------------------------------------------------------------------------------------//
     // SENSITIVE DETECTOR

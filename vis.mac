@@ -5,7 +5,8 @@
 /vis/viewer/flush
 /vis/scene/add/trajectories smooth
 /vis/scene/add/hits
-/vis/scene/endOfEventAction accumulate
+/vis/scene/add/axes
+#/vis/scene/endOfEventAction accumulate
 
 #/vis/modeling/trajectories/create/drawByCharge
 #/vis/modeling/trajectories/drawByCharge-0/default/setDrawStepPts true
@@ -14,13 +15,13 @@
 /vis/viewer/set/viewpointThetaPhi 0 0 deg
 
 /cpfm/src/SetSrcConfID 1
-/cpfm/src/SetSrcShiftX 4.5 mm
-/cpfm/src/SetSrcShiftY 0.0 mm
-/cpfm/src/SetSrcShiftZ 399.0 mm
+/cpfm/src/SetSrcShiftX 0.0 cm
+/cpfm/src/SetSrcShiftY 0.0 cm
+/cpfm/src/SetSrcShiftZ 10.0 cm
 /cpfm/abs/Width1 0.1 mm
 /cpfm/abs/Width2 0.2 mm
 /cpfm/step/Prob1 1.0
 /cpfm/step/Prob2 1.0
 /cpfm/ModifyGeometry
 
-/run/beamOn 99
+/run/beamOn 10

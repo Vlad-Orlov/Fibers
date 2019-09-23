@@ -95,6 +95,10 @@ void DetectorConstruction::DefineMaterials()
     G4Element* Al = G4NistManager::Instance()->FindOrBuildElement("Al");
     G4Element* Zn = G4NistManager::Instance()->FindOrBuildElement("Zn");
     G4Element* Cu = G4NistManager::Instance()->FindOrBuildElement("Cu");
+    G4Element* Lu = G4NistManager::Instance()->FindOrBuildElement("Lu");
+    G4Element* Ce = G4NistManager::Instance()->FindOrBuildElement("Ce");
+    G4Element* Y = G4NistManager::Instance()->FindOrBuildElement("Y");
+
 
     // Quartz Material (SiO2)
     G4Material* SiO2 = new G4Material("quartz",2.200*g/cm3,2);
@@ -129,6 +133,20 @@ void DetectorConstruction::DefineMaterials()
     G4NistManager::Instance()->FindOrBuildMaterial("G4_PLEXIGLASS");
     G4Material* Plexiglass = G4Material::GetMaterial("G4_PLEXIGLASS");
 
+
+    // Scintilator
+    G4Material *Scint_mat = new G4Material("Scint", 7.4*g/cm3, 4);
+      Scint_mat->AddElement(Lu, 71*perCent);
+      Scint_mat->AddElement(Si, 7*perCent);
+      Scint_mat->AddElement(O, 18*perCent);
+      Scint_mat->AddElement(Y, 4*perCent);
+
+   // Lyso
+    G4Material *LYSO = new G4Material("LYSO", 7.4*g/cm3, 2);
+      LYSO->AddMaterial(Scint_mat, 99.81*perCent);
+      LYSO->AddElement(Ce, 0.19*perCent);
+
+
     // Assign Materials
     world.material = Air;
     sec1.material = SiO2;
@@ -148,6 +166,7 @@ void DetectorConstruction::DefineMaterials()
     source_shield2.material = Brass;
     absorber_1.material = Aluminum;
     absorber_2.material = Aluminum;
+    scintillator.material = LYSO;
 
     //
     // Generate and Add Material Properties Table
@@ -337,7 +356,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
 
     //-----------------------------------------------------------------------------------------------////-----------------------------------------------------------------------------------------------//
-    // SENSETIVE
+    // SENSITIVE
     //-----------------------------------------------------------------------------------------------////-----------------------------------------------------------------------------------------------//
     // Calculation
     G4ThreeVector TaMySen;
@@ -545,15 +564,18 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                         abs23.material,           //its material
                         "Holder");                //its name
 
-  rotation->rotateY(- 90*deg -47*deg);
-  // G4VPhysicalVolume* holderPhysical =
-  //   new G4PVPlacement(rotation,                     //no rotation
-  //                     G4ThreeVector(-3*cm,1*mm,0), //at
-  //                     holderLogical,               //its logical volume
-  //                     "Holder",                    //its name
-  //                     world.logical,               //its mother  volume
-  //                     false,                       //no boolean operation
-  //                     0);                          //copy number
+  rotation->rotateY(-UA9Const::angleDet);
+
+  G4VPhysicalVolume* holderPhysical =
+    new G4PVPlacement(rotation,                     //no rotation
+                      G4ThreeVector(UA9Const::holderPozX,
+                                    1.5*mm,
+                                    UA9Const::holderPozZ), //at
+                      holderLogical,               //its logical volume
+                      "Holder",                    //its name
+                      world.logical,               //its mother  volume
+                      false,                       //no boolean operation
+                      0);                          //copy number
 
 
 
@@ -566,20 +588,21 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   G4double scint_lenght = 5*mm;
 
   G4Box* scintSolidBox =
-    new G4Box("Part4",                                          //its name
+    new G4Box("Scint",                                          //its name
        0.5*scint_width, 0.5*scint_height,0.5*scint_lenght);     //its size
 
 
   G4LogicalVolume* scintLogical =
   new G4LogicalVolume(scintSolidBox,          //its solid
-                      abs23.material,           //its material
-                      "Part4");            //its name
+                      scintillator.material,           //its material
+                      "trigTop");            //its name
 
-  G4VPhysicalVolume* holderPhysical =
+G4double scintPozZ = UA9Const::holderPozZ + (-UA9Const::holderPozX + UA9Const::scintPozX) / TMath::Tan(UA9Const::angleDet);
+  G4VPhysicalVolume* scintPhysical =
     new G4PVPlacement(rotation,                     //no rotation
-                      G4ThreeVector(-3*cm,1*mm,0), //at
-                      holderLogical,               //its logical volume
-                      "Holder",                    //its name
+                      G4ThreeVector(UA9Const::scintPozX,1.5*mm,scintPozZ), //at
+                      scintLogical,               //its logical volume
+                      "trigTop",                    //its name
                       world.logical,               //its mother  volume
                       false,                       //no boolean operation
                       0);                          //copy number

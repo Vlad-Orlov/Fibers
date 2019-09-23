@@ -46,13 +46,13 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 
     G4double PosX = 0.0*cm;
     G4double PosY = 0.0*cm;
-    G4double PosZ =   0.0*cm;
+    G4double PosZ = 0.0*cm;
 
     G4bool trkIsOk = false;
     G4int nMax = 1000000;
 
 
-///// Code for 90Sr cource
+///// Code for 90Sr source
     for(G4int i = 0; i < nMax; i++)
     {
         // PosX = G4UniformRand()*UA9Const::_src_length - UA9Const::_src_length/2;
@@ -86,17 +86,23 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
             G4double excitEnergy = 0.*keV;
 
 //            G4ParticleDefinition* ion = G4ParticleTable::GetParticleTable()->GetIon(Z,A,excitEnergy);
-                G4String particleName = "e-";
 
-                G4ParticleDefinition* particle = G4ParticleTable::GetParticleTable()->FindParticle(particleName);
-                _particleGun->SetParticleDefinition(particle);
+            PosX = -10*mm;
+            PosY = 1.5*mm;
+            PosZ = 0*mm;
+
+
+            G4String particleName = "e-";
+
+            G4ParticleDefinition* particle = G4ParticleTable::GetParticleTable()->FindParticle(particleName);
+            _particleGun->SetParticleDefinition(particle);
             //_particleGun->SetParticleDefinition(ion);
             //_particleGun->SetParticleCharge(ionCharge);
             _particleGun->SetParticlePosition(G4ThreeVector(PosX,PosY,PosZ));
             G4ThreeVector direction = G4ThreeVector(1,0,0);
             // direction.rotateY(-47*deg);
             _particleGun->SetParticleMomentumDirection(direction);
-            _particleGun->SetParticleEnergy(1*MeV);
+            _particleGun->SetParticleEnergy(2*MeV);
             _particleGun->GeneratePrimaryVertex(anEvent);
         }
     }

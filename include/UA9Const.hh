@@ -7,7 +7,10 @@ using namespace CLHEP;
 
 namespace UA9Const
 {
-    const G4double angleDet = 47.0*deg;
+    const G4double angleDet = (90.0+20.0)*deg;
+    const G4double holderPozZ = -100.*mm;
+    const G4double holderPozX = -3*cm;
+    const G4double scintPozX = 3*cm;
     const G4double probability = 1.0;
     const G4double _sensitive_size = 22.0*mm;
 
@@ -22,6 +25,8 @@ namespace UA9Const
     const G4double _src_diam    = 2.20*mm;
 
     const G4double _absorber_thick = 0.1*mm;
+
+
 }
 
 #endif

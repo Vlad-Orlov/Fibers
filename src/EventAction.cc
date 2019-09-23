@@ -17,7 +17,7 @@
 #include "TROOT.h"
 #include "TMath.h"
 
-EventAction::EventAction(RunAction* runact, SteppingAction* steppingAction) :  runAction(runact), _steppingAction(steppingAction), printModulo(100000)
+EventAction::EventAction(RunAction* runact, SteppingAction* steppingAction) :  runAction(runact), _steppingAction(steppingAction), printModulo(1000)
 {
     thePhotonCollectionID = -1;
     _steppingAction->EnergyTop = 0.0;

@@ -13,4 +13,4 @@
 /cpfm/step/Prob2 1.0
 /cpfm/ModifyGeometry
 
-/run/beamOn 10000000
+/run/beamOn 1000000

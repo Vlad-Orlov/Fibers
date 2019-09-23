@@ -15,7 +15,7 @@ class DetectorMessenger;
 class DetectorConstruction : public G4VUserDetectorConstruction
 {
 public:
-  
+
   DetectorConstruction();
   ~DetectorConstruction();
 
@@ -33,7 +33,7 @@ public:
   G4double GetSrcShiftZ()   {return _src_shiftZ;}
   G4double GetAbsWidth1()   {return _abs_width1;}
   G4double GetAbsWidth2()   {return _abs_width2;}
-   
+
 private:
   G4int _src_conf_id;
   G4double _src_shiftX;
@@ -45,7 +45,7 @@ private:
   DetectorMessenger* fDetectorMessenger;
 
 public:
-  
+
   G4VPhysicalVolume* Construct();
   void ConstructDetector();
 
@@ -67,10 +67,11 @@ private:
   G4VisAttributes* absorberVisAtt;
 
   WorldStruct world;
+  WorldStruct scintillator;
   SecStruct sec1;
   SecStruct sec2;
   SecStruct sec3;
-  SenDetStruct sensitive;  
+  SenDetStruct sensitive;
   SecStruct viewport;
   SecStruct source_shield1;
   SecStruct source_shield2;
